@@ -1,5 +1,5 @@
 ## Custom modifications
-### bsdf:
+### bsdfs:
 - added translucent bsdf (from mitsuba)
 ### textures:
 - added mix texture
