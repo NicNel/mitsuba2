@@ -5,3 +5,8 @@ add_plugin(checkerboard checkerboard.cpp)
 add_plugin(constvolume  constant3d.cpp)
 add_plugin(gridvolume   grid3d.cpp)
 add_plugin(mesh_attribute   mesh_attribute.cpp)
+add_plugin(fresnel       fresnel.cpp)
+add_plugin(scale       scale.cpp)
+add_plugin(mix       mix.cpp)
+
+
