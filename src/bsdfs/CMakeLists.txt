@@ -20,6 +20,7 @@ add_plugin(retarder             retarder.cpp)
 add_plugin(circular             circular.cpp)
 add_plugin(measured_polarized   measured_polarized.cpp)
 add_plugin(pplastic             pplastic.cpp)
+add_plugin(difftrans            difftrans.cpp)
 
 # Register the test directory
 add_tests(${CMAKE_CURRENT_SOURCE_DIR}/tests)
