@@ -1,11 +1,11 @@
-Custom modifications
-bsdf:
+## Custom modifications
+### bsdf:
 - added translucent bsdf
-textures:
+### textures:
 - added mix texture
 - added scale texture
 - added fresnel mix texture (based on blender cycles fresnel node)
-film:
+### film:
 - added albedo aov for aov integrator
 
 <img src="https://github.com/mitsuba-renderer/mitsuba2/raw/master/docs/images/logo_plain.png" width="120" height="120" alt="Mitsuba logo">
