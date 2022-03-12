@@ -194,6 +194,25 @@ public:
         return oss.str();
     }
 
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+        SurfaceInteraction3f si2(si);
+        Mask front_side = Frame3f::cos_theta(si2.wi) > 0.f && active,
+             back_side  = Frame3f::cos_theta(si2.wi) < 0.f && active;
+        Spectrum result = 0.f;
+
+        if (any_or<true>(front_side))
+            result = m_brdf[0]->getAlbedo(si2, active);
+
+        if (any_or<true>(back_side)) {
+            si2.wi.z() *= -1.f;
+            result = m_brdf[1]->getAlbedo(si2, active);
+        }
+
+        return result;
+    }
+
     MTS_DECLARE_CLASS()
 protected:
     ref<Base> m_brdf[2];

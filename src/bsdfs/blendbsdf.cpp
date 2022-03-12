@@ -178,6 +178,15 @@ public:
             << "]";
         return oss.str();
     }
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+
+        Float weight = eval_weight(si, active);
+
+        return m_nested_bsdf[0]->getAlbedo(si, active) * (1 - weight) +
+               m_nested_bsdf[1]->getAlbedo(si, active) * weight;
+    }
 
     MTS_DECLARE_CLASS()
 protected:

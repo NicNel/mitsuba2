@@ -179,6 +179,14 @@ public:
         return oss.str();
     }
 
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+
+        Float opacity = eval_opacity(si, active);
+        return m_nested_bsdf->getAlbedo(si, active) * opacity;
+    }
+
     MTS_DECLARE_CLASS()
 private:
     ref<Texture> m_opacity;

@@ -194,6 +194,18 @@ public:
         return oss.str();
     }
 
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+        return m_nested_bsdf->getAlbedo(si, active);
+    }
+
+    Frame3f getShFrame(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        Frame3f result = frame(si, active);
+        return result;
+    }
+
     MTS_DECLARE_CLASS()
 protected:
     ScalarFloat m_scale;

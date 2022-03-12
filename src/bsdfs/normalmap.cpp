@@ -83,6 +83,7 @@ public:
 
         // TODO: How to assert this is actually a RGBDataTexture?
         m_normalmap = props.texture<Texture>("normalmap");
+        m_scale = props.float_("scale", 1.0f);
 
         // Add all nested components
         m_flags = (uint32_t) 0;
@@ -147,11 +148,15 @@ public:
     }
 
     Frame3f frame(const SurfaceInteraction3f &si, Mask active) const {
-        Normal3f n = fmadd(m_normalmap->eval_3(si, active), 2, -1.f);
+        Vector3f v = m_normalmap->eval_3(si, active);
+        mask_t<Float> s_m = m_scale > 0;
+        v[2] /= (any_or<true>(s_m)) ? m_scale: 0.00000001f;
+        Normal3f n = fmadd(v, 2, -1.f);
 
         Frame3f result;
         result.n = normalize(n);
-        result.s = normalize(fnmadd(result.n, dot(result.n, si.dp_du), si.dp_du));
+        result.s = normalize(
+            fnmadd(result.n, dot(result.n, si.dp_du), si.dp_du));
         result.t = cross(result.n, result.s);
         return result;
     }
@@ -172,10 +177,22 @@ public:
         return oss.str();
     }
 
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+        return m_nested_bsdf->getAlbedo(si, active);
+    }
+    Frame3f getShFrame(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        Frame3f result = frame(si, active);
+        return result;
+    }
+
     MTS_DECLARE_CLASS()
 protected:
     ref<Base> m_nested_bsdf;
     ref<Texture> m_normalmap;
+    ScalarFloat m_scale;
 };
 
 MTS_IMPLEMENT_CLASS_VARIANT(NormalMap, BSDF)

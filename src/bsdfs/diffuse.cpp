@@ -146,6 +146,12 @@ public:
         return oss.str();
     }
 
+    Spectrum getAlbedo(const SurfaceInteraction3f &si,
+                       Mask active) const override {
+        MTS_MASKED_FUNCTION(ProfilerPhase::BSDFEvaluate, active);
+        return m_reflectance->eval(si, active);
+    }
+
     MTS_DECLARE_CLASS()
 private:
     ref<Texture> m_reflectance;
